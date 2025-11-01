@@ -57,8 +57,15 @@ jobs:
           exit 1
         fi
         
-        if ! grep -q "confluence:macro:" manifest.yml; then
-          echo "❌ FAILED: Missing Confluence macro definition"
+        # Check for macro definition (updated for new Forge structure)
+        if ! grep -q -E "(macro:|confluence:macro:)" manifest.yml; then
+          echo "❌ FAILED: Missing macro definition"
+          exit 1
+        fi
+        
+        # Check for required app section
+        if ! grep -q "app:" manifest.yml; then
+          echo "❌ FAILED: Missing 'app' section"
           exit 1
         fi
         
