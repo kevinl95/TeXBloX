@@ -14,12 +14,18 @@ async function build() {
     entryPoints: [path.resolve(__dirname, '..', 'src', 'frontend', 'index.js')],
     bundle: true,
     outfile: path.resolve(outdir, 'bundle.js'),
+    platform: 'browser',
+    format: 'iife',
+    target: 'es2020',
     loader: { 
       '.js': 'jsx', 
       '.css': 'css',
       '.woff2': 'file',
       '.woff': 'file',
       '.ttf': 'file'
+    },
+    define: {
+      'process.env.NODE_ENV': '"production"'
     }
   });
 

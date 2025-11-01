@@ -1,6 +1,8 @@
 # TeXBloX
 
-TeXBloX — Beautiful LaTeX math blocks for Confluence.
+[![Forge Validation & Runs on Atlassian Compliance](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml)
+
+Beautiful LaTeX math blocks for Confluence.
 
 ## Goals
 
@@ -28,17 +30,6 @@ TeXBloX — Beautiful LaTeX math blocks for Confluence.
    forge install --product confluence --user <your-user>
    ```
 6. Use the TeXBloX macro in Confluence and provide the formula parameter
-
-## Continuous Integration
-
-This project includes a GitHub Actions workflow that validates:
-
-- ✅ **Build integrity**: Ensures the UI builds successfully
-- ✅ **Runs on Atlassian compliance**: Validates no external dependencies
-- ✅ **Security audit**: Checks for vulnerabilities in dependencies
-- ✅ **Manifest validation**: Ensures proper Forge app structure
-
-The workflow runs automatically on pushes and pull requests to `main` and `develop` branches.
 
 ## Notes on Runs on Atlassian
 
