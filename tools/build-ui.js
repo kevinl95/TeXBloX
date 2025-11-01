@@ -16,7 +16,10 @@ async function build() {
     outfile: path.resolve(outdir, 'bundle.js'),
     loader: { 
       '.js': 'jsx', 
-      '.css': 'css' 
+      '.css': 'css',
+      '.woff2': 'file',
+      '.woff': 'file',
+      '.ttf': 'file'
     }
   });
 
