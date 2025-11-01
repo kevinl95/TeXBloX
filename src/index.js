@@ -2,9 +2,13 @@ import Resolver from '@forge/resolver';
 
 const resolver = new Resolver();
 
-// Minimal resolver — we simply pass the formula through to the Custom UI.
+// Pass the formula from macro parameters to the Custom UI
 resolver.define('getFormula', async (req) => {
-    const { formula = '' } = req.payload || {};
+    console.log('Resolver request:', req);
+    
+    // Extract formula from macro parameters
+    const formula = req.context?.extension?.macro?.parameters?.formula || 'E = mc^2';
+    
     return { formula };
 });
 

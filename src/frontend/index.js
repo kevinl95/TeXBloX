@@ -5,8 +5,16 @@ import 'katex/dist/katex.min.css';
 async function render() {
   const ctx = await view.getContext();
   
-  // Forge provides extension parameters on the context when used as a macro preview/renderer
-  const formula = ctx?.extension?.formula || ctx?.view || 'E = mc^2';
+  // Get formula from the backend resolver
+  let formula = 'E = mc^2';
+  try {
+    const response = await view.invoke('getFormula');
+    formula = response.formula || 'E = mc^2';
+  } catch (err) {
+    console.error('Failed to get formula from resolver:', err);
+    // Fallback to context if resolver fails
+    formula = ctx?.extension?.macro?.parameters?.formula || 'E = mc^2';
+  }
 
   const root = document.getElementById('root');
   const pre = document.createElement('div');

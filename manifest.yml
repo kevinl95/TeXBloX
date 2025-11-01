@@ -1,7 +1,9 @@
 modules:
-  confluence:macro:
+  macro:
     - key: texblox-macro
-      function: render-math
+      resource: main
+      resolver:
+        function: resolver
       title: TeXBloX
       description: "Render LaTeX math blocks on your Confluence pages"
       parameters:
@@ -9,15 +11,17 @@ modules:
           name: Formula
           description: Enter LaTeX code (without $$ delimiters)
           type: string
-function:
-  - key: render-math
-    runtime: nodejs18.x
-    handler: index.handler
+  function:
+    - key: resolver
+      handler: index.handler
+resources:
+  - key: main
+    path: static
 app:
-id: com.loefflerlabs.texblox
-name: TeXBloX
-
+  runtime:
+    name: nodejs22.x
+    memoryMB: 256
+    architecture: arm64
+  id: ari:cloud:ecosystem::app/446c2bb7-9a68-48a6-83f6-38fc41031264
 permissions:
-# Intentionally empty to avoid allowing external fetches/egress
-
-manifestVersion: 1
+  scopes: []
