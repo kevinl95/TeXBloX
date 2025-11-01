@@ -1,0 +1,18 @@
+{
+    "name": "texblox",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "build:ui": "node ./tools/build-ui.js",
+        "build": "npm run build:ui",
+        "deploy": "forge deploy",
+        "install:forge": "npm i @forge/cli -g"
+    },
+    "dependencies": {
+        "@forge/bridge": "^2.5.0",
+        "katex": "^0.16.8"
+    },
+    "devDependencies": {
+        "esbuild": "^0.17.0"
+    }
+}
