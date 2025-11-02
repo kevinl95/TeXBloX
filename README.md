@@ -1,8 +1,13 @@
-# TeXBloX
-
-[![Forge Validation & Runs on Atlassian Compliance](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml)[![Unit Tests](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml)
-
-Beautiful LaTeX math blocks for Confluence.
+<div align="center">
+  <img src="assets/texblox-logo.png" alt="TeXBloX Logo" width="200" height="200">
+  
+  # TeXBloX
+  
+  [![Forge Validation & Runs on Atlassian Compliance](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml)
+  [![Unit Tests](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml)
+  
+  **Beautiful LaTeX math blocks for Confluence.**
+</div>
 
 ## Goals
 
