@@ -32,8 +32,9 @@ async function renderConfig() {
   label.style.marginBottom = '8px';
   label.style.fontWeight = '600';
   
-  // Get current formula from config
+  // Get current formula and display mode from config
   const currentFormula = ctx?.extension?.config?.formula || 'E = mc^2';
+  const currentDisplayMode = ctx?.extension?.config?.displayMode || 'inline';
   
   // Input field
   const input = document.createElement('textarea');
@@ -47,6 +48,60 @@ async function renderConfig() {
   input.style.fontFamily = 'monospace';
   input.style.boxSizing = 'border-box';
   input.style.resize = 'vertical';
+  
+  // Display mode section
+  const displayModeLabel = document.createElement('label');
+  displayModeLabel.textContent = 'Display Mode:';
+  displayModeLabel.style.display = 'block';
+  displayModeLabel.style.marginTop = '16px';
+  displayModeLabel.style.marginBottom = '8px';
+  displayModeLabel.style.fontWeight = '600';
+  
+  const displayModeContainer = document.createElement('div');
+  displayModeContainer.style.display = 'flex';
+  displayModeContainer.style.gap = '16px';
+  displayModeContainer.style.marginBottom = '8px';
+  
+  // Inline radio button
+  const inlineContainer = document.createElement('label');
+  inlineContainer.style.display = 'flex';
+  inlineContainer.style.alignItems = 'center';
+  inlineContainer.style.cursor = 'pointer';
+  
+  const inlineRadio = document.createElement('input');
+  inlineRadio.type = 'radio';
+  inlineRadio.name = 'displayMode';
+  inlineRadio.value = 'inline';
+  inlineRadio.checked = currentDisplayMode === 'inline';
+  inlineRadio.style.marginRight = '8px';
+  
+  const inlineLabel = document.createElement('span');
+  inlineLabel.textContent = 'Inline (flows with text)';
+  
+  inlineContainer.appendChild(inlineRadio);
+  inlineContainer.appendChild(inlineLabel);
+  
+  // Block radio button
+  const blockContainer = document.createElement('label');
+  blockContainer.style.display = 'flex';
+  blockContainer.style.alignItems = 'center';
+  blockContainer.style.cursor = 'pointer';
+  
+  const blockRadio = document.createElement('input');
+  blockRadio.type = 'radio';
+  blockRadio.name = 'displayMode';
+  blockRadio.value = 'block';
+  blockRadio.checked = currentDisplayMode === 'block';
+  blockRadio.style.marginRight = '8px';
+  
+  const blockLabel = document.createElement('span');
+  blockLabel.textContent = 'Block (centered, separate line)';
+  
+  blockContainer.appendChild(blockRadio);
+  blockContainer.appendChild(blockLabel);
+  
+  displayModeContainer.appendChild(inlineContainer);
+  displayModeContainer.appendChild(blockContainer);
   
   // Preview
   const previewLabel = document.createElement('label');
@@ -108,6 +163,7 @@ async function renderConfig() {
   
   function updatePreview() {
     const formula = input.value.trim();
+    const selectedDisplayMode = document.querySelector('input[name="displayMode"]:checked')?.value || 'inline';
     previewArea.innerHTML = '';
     
     if (!formula) {
@@ -118,7 +174,7 @@ async function renderConfig() {
     try {
       katex.render(formula, previewArea, { 
         throwOnError: false, 
-        displayMode: true 
+        displayMode: selectedDisplayMode === 'block'
       });
     } catch (err) {
       previewArea.innerHTML = `<span style="color: #de350b;">Error: ${err.message}</span>`;
@@ -138,14 +194,18 @@ async function renderConfig() {
   
   // Event listeners
   input.addEventListener('input', updatePreview);
+  inlineRadio.addEventListener('change', updatePreview);
+  blockRadio.addEventListener('change', updatePreview);
   
   saveButton.addEventListener('click', async () => {
     const formula = input.value.trim() || 'E = mc^2';
+    const selectedDisplayMode = document.querySelector('input[name="displayMode"]:checked')?.value || 'inline';
     
     try {
       await view.submit({
         config: {
-          formula: formula
+          formula: formula,
+          displayMode: selectedDisplayMode
         }
       });
     } catch (err) {
@@ -161,6 +221,8 @@ async function renderConfig() {
   container.appendChild(title);
   container.appendChild(label);
   container.appendChild(input);
+  container.appendChild(displayModeLabel);
+  container.appendChild(displayModeContainer);
   container.appendChild(previewLabel);
   container.appendChild(previewArea);
   container.appendChild(examplesLabel);

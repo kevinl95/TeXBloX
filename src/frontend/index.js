@@ -41,23 +41,27 @@ async function render() {
   console.log('Extension config content:', ctx?.extension?.config);
   console.log('Is editing:', ctx?.extension?.isEditing);
   
-  // Get formula from multiple possible sources
+  // Get formula and display mode from multiple possible sources
   let formula = 'E = mc^2';
+  let displayMode = 'inline';
   let formulaSource = 'default';
   
   // Method 1: Direct macro parameters
   if (ctx?.extension?.macro?.parameters?.formula) {
     formula = ctx.extension.macro.parameters.formula;
+    displayMode = ctx.extension.macro.parameters.displayMode || 'inline';
     formulaSource = 'macro.parameters';
   }
-  // Method 2: Config object
+  // Method 2: Extension-level config
   else if (ctx?.extension?.config?.formula) {
     formula = ctx.extension.config.formula;
+    displayMode = ctx.extension.config.displayMode || 'inline';
     formulaSource = 'config';
   }
   // Method 3: Look for any parameter-like data
   else if (ctx?.extension?.macro?.config?.formula) {
     formula = ctx.extension.macro.config.formula;
+    displayMode = ctx.extension.macro.config.displayMode || 'inline';
     formulaSource = 'macro.config';
   }
   // Method 4: Check if we're in edit mode and should show config
@@ -68,12 +72,24 @@ async function render() {
   }
   
   console.log(`Formula: "${formula}" (source: ${formulaSource})`);
+  console.log(`Display mode: "${displayMode}"`);
   
   // Create container with inline styles (CSP-safe) - prevent squishing
-  const mathContainer = document.createElement('span');
-  mathContainer.style.display = 'inline-block';
-  mathContainer.style.margin = '0 4px';         // More side margin
-  mathContainer.style.verticalAlign = 'middle';
+  const mathContainer = document.createElement('div');
+  
+  if (displayMode === 'block') {
+    // Block mode: centered, full width
+    mathContainer.style.display = 'block';
+    mathContainer.style.textAlign = 'center';
+    mathContainer.style.margin = '10px 0';      // Vertical margin for spacing
+    mathContainer.style.width = '100%';
+  } else {
+    // Inline mode: inline with text
+    mathContainer.style.display = 'inline-block';
+    mathContainer.style.margin = '0 4px';       // More side margin
+    mathContainer.style.verticalAlign = 'middle';
+  }
+  
   mathContainer.style.fontSize = '1.1em';
   mathContainer.style.whiteSpace = 'nowrap';     // Prevent line wrapping
   mathContainer.style.minWidth = 'max-content';  // Allow natural width
@@ -83,10 +99,13 @@ async function render() {
   // Debug: Show what we're trying to render
   console.log('Attempting to render with KaTeX...');
   
+  // Convert display mode string to boolean
+  const isDisplayMode = displayMode === 'block';
+  
   try {
     katex.render(formula, mathContainer, {
       throwOnError: false,
-      displayMode: false,
+      displayMode: isDisplayMode,
       output: 'html',
       strict: false,
       trust: true,
@@ -124,9 +143,19 @@ async function render() {
   
   // Remove the test prefix - just add the math directly
   root.appendChild(mathContainer);
-  root.style.display = 'inline-block';
-  root.style.margin = '0';
-  root.style.whiteSpace = 'nowrap';    // Prevent root from wrapping
+  
+  if (displayMode === 'block') {
+    // Block mode: full width, block display
+    root.style.display = 'block';
+    root.style.width = '100%';
+    root.style.margin = '0';
+  } else {
+    // Inline mode: inline with text
+    root.style.display = 'inline-block';
+    root.style.margin = '0';
+    root.style.whiteSpace = 'nowrap';    // Prevent root from wrapping
+  }
+  
   root.style.overflow = 'visible';     // Allow content to extend beyond bounds
   root.style.boxSizing = 'border-box'; // Include padding in size calculations
   

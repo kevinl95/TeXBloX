@@ -17,6 +17,15 @@ modules:
           type: string
           required: true
           defaultValue: "E = mc^2"
+        - key: displayMode
+          name: "Display Mode"
+          description: "How to display the formula"
+          type: string
+          required: false
+          defaultValue: "inline"
+          validValues:
+            - "inline"
+            - "block"
   function:
     - key: resolver
       handler: index.handler
