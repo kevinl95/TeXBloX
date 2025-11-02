@@ -70,6 +70,27 @@ The TeXBloX configuration dialog provides:
 - **Inline mode**: Formulas flow within text, suitable for mathematical expressions in sentences
 - **Block mode**: Formulas are centered on separate lines, suitable for equations and larger expressions
 
+## Testing
+
+The project includes comprehensive unit tests covering:
+- Formula source detection and extraction logic
+- Display mode handling and conversion
+- Configuration value processing
+- Example formula validation
+- Form data preparation
+- KaTeX options configuration
+
+### Running Tests
+
+```bash
+npm test
+```
+
+### Test Structure
+- `tests/main-rendering.test.js` - Tests for LaTeX rendering logic
+- `tests/config-interface.test.js` - Tests for configuration interface logic  
+- `tests/utilities.test.js` - Tests for utility functions and data handling
+
 ## Notes on Runs on Atlassian
 
 - **manifest.yml** intentionally does not request external fetch permissions

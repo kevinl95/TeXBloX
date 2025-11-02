@@ -6,7 +6,9 @@
         "build:ui": "node ./tools/build-ui.js",
         "build": "npm run build:ui",
         "deploy": "forge deploy",
-        "install:forge": "npm i @forge/cli -g"
+        "install:forge": "npm i @forge/cli -g",
+        "test": "jest",
+        "test:watch": "jest --watch"
     },
     "dependencies": {
         "@forge/api": "^6.1.5",
@@ -16,6 +18,12 @@
         "tslib": "^2.6.0"
     },
     "devDependencies": {
-        "esbuild": "^0.25.11"
+        "@babel/core": "^7.28.5",
+        "@babel/preset-env": "^7.28.5",
+        "babel-jest": "^30.2.0",
+        "esbuild": "^0.25.11",
+        "identity-obj-proxy": "^3.0.0",
+        "jest": "^30.2.0",
+        "jest-environment-jsdom": "^30.2.0"
     }
 }
