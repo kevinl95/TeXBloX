@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/texblox-logo.png" alt="TeXBloX Logo" width="200" height="200">
+  <img src="assets/logo.png" alt="TeXBloX Logo" width="200" height="200">
   
   # TeXBloX
   
