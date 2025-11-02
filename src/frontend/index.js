@@ -2,7 +2,18 @@ import { view } from '@forge/bridge';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
+// Global flags to prevent multiple simultaneous renders and resizes
+let isRendering = false;
+let globalHasResized = false;
+
 async function render() {
+  if (isRendering) {
+    console.log('Render already in progress, skipping');
+    return;
+  }
+  
+  isRendering = true;
+  globalHasResized = false; // Reset for new render
   console.log('=== TeXBloX Starting ===');
   
   const ctx = await view.getContext();
@@ -61,11 +72,13 @@ async function render() {
   // Create container with inline styles (CSP-safe) - prevent squishing
   const mathContainer = document.createElement('span');
   mathContainer.style.display = 'inline-block';
-  mathContainer.style.margin = '0 2px';
+  mathContainer.style.margin = '0 4px';         // More side margin
   mathContainer.style.verticalAlign = 'middle';
   mathContainer.style.fontSize = '1.1em';
   mathContainer.style.whiteSpace = 'nowrap';     // Prevent line wrapping
   mathContainer.style.minWidth = 'max-content';  // Allow natural width
+  mathContainer.style.overflow = 'visible';      // Don't clip content
+  mathContainer.style.boxSizing = 'border-box'; // Include padding in measurements
   
   // Debug: Show what we're trying to render
   console.log('Attempting to render with KaTeX...');
@@ -93,6 +106,15 @@ async function render() {
       console.log('KaTeX font-size:', computedStyle.fontSize);
     }
     
+    // Try to wait for fonts if the browser supports it
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        console.log('Document fonts ready');
+      }).catch(err => {
+        console.log('Font loading detection failed:', err);
+      });
+    }
+    
   } catch (err) {
     console.error('❌ KaTeX render error:', err);
     mathContainer.innerHTML = `<span style="color: #de350b; font-size: 14px; background: #fff2f0; padding: 2px 4px; border-radius: 3px;">LaTeX Error: ${err.message}</span>`;
@@ -106,31 +128,100 @@ async function render() {
   root.style.margin = '0';
   root.style.whiteSpace = 'nowrap';    // Prevent root from wrapping
   root.style.overflow = 'visible';     // Allow content to extend beyond bounds
+  root.style.boxSizing = 'border-box'; // Include padding in size calculations
   
-  // Debug: Check if content is actually in DOM and visible
-  console.log('Root element:', root);
-  console.log('Root innerHTML after append:', root.innerHTML);
-  console.log('Root styles:', {
-    display: root.style.display,
-    visibility: root.style.visibility,
-    opacity: root.style.opacity,
-    width: root.offsetWidth,
-    height: root.offsetHeight
-  });
-  console.log('Math container styles:', {
-    display: mathContainer.style.display,
-    visibility: mathContainer.style.visibility,
-    opacity: mathContainer.style.opacity,
-    width: mathContainer.offsetWidth,
-    height: mathContainer.offsetHeight
-  });
-
-  // Gentler cleanup - only target obvious duplicates
-  setTimeout(() => {
-    gentleCleanup(formula);
-  }, 200);
+  // Auto-resize with font loading detection and anti-feedback loop protection
+  let resizeAttempt = 0;
+  let hasResized = false;
+  const maxRetries = 3;
+  
+  const tryResize = () => {
+    // Prevent multiple resize operations globally
+    if (hasResized || globalHasResized) {
+      console.log('Already resized (local or global), skipping additional resize');
+      return;
+    }
+    
+    resizeAttempt++;
+    
+    // Get fresh measurements
+    const actualWidth = mathContainer.scrollWidth;
+    const actualHeight = mathContainer.scrollHeight;
+    const boundingBox = mathContainer.getBoundingClientRect();
+    
+    // Check if fonts seem to be loaded by looking for reasonable dimensions
+    const katexSpan = mathContainer.querySelector('.katex');
+    const hasReasonableDimensions = actualWidth > 30 && actualHeight > 15;
+    const fontsLoaded = katexSpan && window.getComputedStyle(katexSpan).fontFamily.includes('KaTeX');
+    
+    console.log(`Resize attempt ${resizeAttempt}:`, { 
+      scrollWidth: actualWidth, 
+      scrollHeight: actualHeight,
+      boundingWidth: boundingBox.width,
+      boundingHeight: boundingBox.height,
+      hasReasonableDimensions,
+      fontsLoaded,
+      fontFamily: katexSpan ? window.getComputedStyle(katexSpan).fontFamily : 'none'
+    });
+    
+    // If dimensions seem too small or fonts aren't loaded, retry (unless max attempts reached)
+    if ((!hasReasonableDimensions || !fontsLoaded) && resizeAttempt < maxRetries) {
+      console.log(`Fonts not ready, retrying in ${100 * resizeAttempt}ms...`);
+      setTimeout(tryResize, 100 * resizeAttempt);
+      return;
+    }
+    
+    // Use the larger of scroll dimensions or bounding box, and be generous
+    const maxWidth = Math.max(actualWidth, boundingBox.width);
+    const maxHeight = Math.max(actualHeight, boundingBox.height);
+    
+    // Special handling for matrices and complex expressions (detect by height)
+    const isComplexExpression = maxHeight > 40 || formula.includes('\\begin{') || formula.includes('\\matrix');
+    const horizontalPadding = isComplexExpression ? 30 : 20; // More padding for complex expressions
+    const verticalPadding = isComplexExpression ? 12 : 8;
+    
+    const minWidth = Math.max(maxWidth + horizontalPadding, 60);
+    const minHeight = Math.max(maxHeight + verticalPadding, 25);
+    
+    console.log('Final container size:', { 
+      width: minWidth, 
+      height: minHeight, 
+      isComplex: isComplexExpression,
+      padding: { h: horizontalPadding, v: verticalPadding }
+    });
+    
+    // Resize the root container
+    root.style.width = `${minWidth}px`;
+    root.style.height = `${minHeight}px`;
+    root.style.minWidth = `${minWidth}px`;
+    root.style.minHeight = `${minHeight}px`;
+    
+    // Since Forge Bridge doesn't have resize, use CSS to communicate size to Confluence
+    document.body.style.width = `${minWidth}px`;
+    document.body.style.height = `${minHeight}px`;
+    document.body.style.minWidth = `${minWidth}px`;
+    document.body.style.minHeight = `${minHeight}px`;
+    document.body.style.overflow = 'visible';
+    
+    // Also set html element to ensure proper sizing
+    document.documentElement.style.width = `${minWidth}px`;
+    document.documentElement.style.height = `${minHeight}px`;
+    
+    console.log(`Set document size to: ${minWidth}x${minHeight}px`);
+    hasResized = true;
+    globalHasResized = true;
+    
+    // Gentler cleanup - only target obvious duplicates
+    setTimeout(() => {
+      gentleCleanup(formula);
+    }, 50);
+  };
+  
+  // Start the resize process
+  setTimeout(tryResize, 50);
   
   console.log('=== TeXBloX Complete ===');
+  isRendering = false; // Allow future renders
 }
 
 function gentleCleanup(formula) {
