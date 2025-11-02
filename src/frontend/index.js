@@ -8,16 +8,13 @@ let globalHasResized = false;
 
 async function render() {
   if (isRendering) {
-    console.log('Render already in progress, skipping');
     return;
   }
   
   isRendering = true;
   globalHasResized = false; // Reset for new render
-  console.log('=== TeXBloX Starting ===');
   
   const ctx = await view.getContext();
-  console.log('TeXBloX Context:', JSON.stringify(ctx, null, 2));
   
   const root = document.getElementById('root');
   if (!root) {
@@ -26,20 +23,6 @@ async function render() {
   }
   
   root.innerHTML = '';
-  
-  // Debug: Look at all possible places for parameters
-  console.log('Extension object:', JSON.stringify(ctx?.extension, null, 2));
-  console.log('Macro object:', JSON.stringify(ctx?.extension?.macro, null, 2));
-  
-  // Check all possible places parameters might be stored
-  console.log('Macro object exists:', !!ctx?.extension?.macro);
-  console.log('Macro parameters exists:', !!ctx?.extension?.macro?.parameters);
-  console.log('Macro parameters content:', ctx?.extension?.macro?.parameters);
-  console.log('Macro config exists:', !!ctx?.extension?.macro?.config);
-  console.log('Macro config content:', ctx?.extension?.macro?.config);
-  console.log('Extension config exists:', !!ctx?.extension?.config);
-  console.log('Extension config content:', ctx?.extension?.config);
-  console.log('Is editing:', ctx?.extension?.isEditing);
   
   // Get formula and display mode from multiple possible sources
   let formula = 'E = mc^2';
@@ -66,13 +49,9 @@ async function render() {
   }
   // Method 4: Check if we're in edit mode and should show config
   else if (ctx?.extension?.isEditing) {
-    console.log('In editing mode - may need to configure macro');
     // For now, use default but indicate we're in edit mode
     formulaSource = 'editing-mode-default';
   }
-  
-  console.log(`Formula: "${formula}" (source: ${formulaSource})`);
-  console.log(`Display mode: "${displayMode}"`);
   
   // Create container with inline styles (CSP-safe) - prevent squishing
   const mathContainer = document.createElement('div');
@@ -96,8 +75,7 @@ async function render() {
   mathContainer.style.overflow = 'visible';      // Don't clip content
   mathContainer.style.boxSizing = 'border-box'; // Include padding in measurements
   
-  // Debug: Show what we're trying to render
-  console.log('Attempting to render with KaTeX...');
+
   
   // Convert display mode string to boolean
   const isDisplayMode = displayMode === 'block';
@@ -114,25 +92,7 @@ async function render() {
       fleqn: false
     });
     
-    console.log('✅ KaTeX rendered successfully');
-    console.log('Rendered HTML:', mathContainer.innerHTML);
-    
-    // Check if fonts are loading
-    const katexSpan = mathContainer.querySelector('.katex');
-    if (katexSpan) {
-      const computedStyle = window.getComputedStyle(katexSpan);
-      console.log('KaTeX font-family:', computedStyle.fontFamily);
-      console.log('KaTeX font-size:', computedStyle.fontSize);
-    }
-    
-    // Try to wait for fonts if the browser supports it
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => {
-        console.log('Document fonts ready');
-      }).catch(err => {
-        console.log('Font loading detection failed:', err);
-      });
-    }
+
     
   } catch (err) {
     console.error('❌ KaTeX render error:', err);
@@ -167,7 +127,6 @@ async function render() {
   const tryResize = () => {
     // Prevent multiple resize operations globally
     if (hasResized || globalHasResized) {
-      console.log('Already resized (local or global), skipping additional resize');
       return;
     }
     
@@ -183,19 +142,8 @@ async function render() {
     const hasReasonableDimensions = actualWidth > 30 && actualHeight > 15;
     const fontsLoaded = katexSpan && window.getComputedStyle(katexSpan).fontFamily.includes('KaTeX');
     
-    console.log(`Resize attempt ${resizeAttempt}:`, { 
-      scrollWidth: actualWidth, 
-      scrollHeight: actualHeight,
-      boundingWidth: boundingBox.width,
-      boundingHeight: boundingBox.height,
-      hasReasonableDimensions,
-      fontsLoaded,
-      fontFamily: katexSpan ? window.getComputedStyle(katexSpan).fontFamily : 'none'
-    });
-    
     // If dimensions seem too small or fonts aren't loaded, retry (unless max attempts reached)
     if ((!hasReasonableDimensions || !fontsLoaded) && resizeAttempt < maxRetries) {
-      console.log(`Fonts not ready, retrying in ${100 * resizeAttempt}ms...`);
       setTimeout(tryResize, 100 * resizeAttempt);
       return;
     }
@@ -212,12 +160,7 @@ async function render() {
     const minWidth = Math.max(maxWidth + horizontalPadding, 60);
     const minHeight = Math.max(maxHeight + verticalPadding, 25);
     
-    console.log('Final container size:', { 
-      width: minWidth, 
-      height: minHeight, 
-      isComplex: isComplexExpression,
-      padding: { h: horizontalPadding, v: verticalPadding }
-    });
+
     
     // Resize the root container
     root.style.width = `${minWidth}px`;
@@ -236,11 +179,11 @@ async function render() {
     document.documentElement.style.width = `${minWidth}px`;
     document.documentElement.style.height = `${minHeight}px`;
     
-    console.log(`Set document size to: ${minWidth}x${minHeight}px`);
+
     hasResized = true;
     globalHasResized = true;
     
-    // Gentler cleanup - only target obvious duplicates
+    // Run cleanup to hide any duplicate parameter text
     setTimeout(() => {
       gentleCleanup(formula);
     }, 50);
@@ -249,12 +192,11 @@ async function render() {
   // Start the resize process
   setTimeout(tryResize, 50);
   
-  console.log('=== TeXBloX Complete ===');
+
   isRendering = false; // Allow future renders
 }
 
 function gentleCleanup(formula) {
-  console.log('Running gentle cleanup for:', formula);
   
   // Only look for obvious parameter display containers
   const suspiciousElements = document.querySelectorAll('p, div, span');
@@ -272,7 +214,6 @@ function gentleCleanup(formula) {
     if (el.textContent.trim() === formula && 
         el.children.length === 0 &&
         !el.innerHTML.includes('katex')) {
-      console.log('🧹 Hiding duplicate parameter text:', el.textContent);
       el.style.opacity = '0';
       el.style.fontSize = '0px';
       el.style.height = '0px';

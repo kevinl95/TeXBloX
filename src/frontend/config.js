@@ -1,16 +1,10 @@
 import { view } from '@forge/bridge';
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
 
 async function renderConfig() {
   const ctx = await view.getContext();
-  console.log('TeXBloX Config Context:', ctx);
   
   const root = document.getElementById('config-root');
-  if (!root) {
-    console.error('Config root element not found!');
-    return;
-  }
+  if (!root) return;
   
   root.innerHTML = '';
   
@@ -103,25 +97,6 @@ async function renderConfig() {
   displayModeContainer.appendChild(inlineContainer);
   displayModeContainer.appendChild(blockContainer);
   
-  // Preview
-  const previewLabel = document.createElement('label');
-  previewLabel.textContent = 'Preview:';
-  previewLabel.style.display = 'block';
-  previewLabel.style.marginTop = '16px';
-  previewLabel.style.marginBottom = '8px';
-  previewLabel.style.fontWeight = '600';
-  
-  const previewArea = document.createElement('div');
-  previewArea.style.minHeight = '60px';
-  previewArea.style.padding = '12px';
-  previewArea.style.backgroundColor = '#f4f5f7';
-  previewArea.style.border = '1px solid #dfe1e6';
-  previewArea.style.borderRadius = '4px';
-  previewArea.style.textAlign = 'center';
-  previewArea.style.display = 'flex';
-  previewArea.style.alignItems = 'center';
-  previewArea.style.justifyContent = 'center';
-  
   // Example buttons
   const examplesLabel = document.createElement('label');
   examplesLabel.textContent = 'Quick Examples:';
@@ -155,29 +130,18 @@ async function renderConfig() {
     
     button.addEventListener('click', () => {
       input.value = example.formula;
-      updatePreview();
     });
     
     examplesContainer.appendChild(button);
   });
   
-  function updatePreview() {
-    const formula = input.value.trim();
-    const selectedDisplayMode = document.querySelector('input[name="displayMode"]:checked')?.value || 'inline';
-    previewArea.innerHTML = '';
-    
-    if (!formula) {
-      previewArea.innerHTML = '<span style="color: #6b778c; font-style: italic;">Enter a formula to see preview</span>';
-      return;
-    }
-    
-    try {
-      katex.render(formula, previewArea, { 
-        throwOnError: false, 
-        displayMode: selectedDisplayMode === 'block'
-      });
-    } catch (err) {
-      previewArea.innerHTML = `<span style="color: #de350b;">Error: ${err.message}</span>`;
+  // Load any existing configuration values
+  if (ctx?.extension?.config) {
+    const config = ctx.extension.config;
+    if (config.formula) input.value = config.formula;
+    if (config.displayMode) {
+      const radio = document.querySelector(`input[value="${config.displayMode}"]`);
+      if (radio) radio.checked = true;
     }
   }
   
@@ -191,11 +155,6 @@ async function renderConfig() {
   saveButton.style.borderRadius = '4px';
   saveButton.style.cursor = 'pointer';
   saveButton.style.fontWeight = '600';
-  
-  // Event listeners
-  input.addEventListener('input', updatePreview);
-  inlineRadio.addEventListener('change', updatePreview);
-  blockRadio.addEventListener('change', updatePreview);
   
   saveButton.addEventListener('click', async () => {
     const formula = input.value.trim() || 'E = mc^2';
@@ -214,8 +173,35 @@ async function renderConfig() {
     }
   });
   
-  // Initial preview
-  updatePreview();
+  // Cancel button
+  const cancelButton = document.createElement('button');
+  cancelButton.textContent = 'Cancel';
+  cancelButton.style.padding = '10px 20px';
+  cancelButton.style.backgroundColor = '#f4f5f7';
+  cancelButton.style.color = '#172b4d';
+  cancelButton.style.border = '1px solid #dfe1e6';
+  cancelButton.style.borderRadius = '4px';
+  cancelButton.style.cursor = 'pointer';
+  cancelButton.style.fontWeight = '600';
+  cancelButton.style.marginLeft = '10px';
+  
+  cancelButton.addEventListener('click', () => {
+    try {
+      view.close();
+    } catch (err) {
+      console.error('Error closing config:', err);
+      // Fallback: try to navigate away or refresh
+      window.history.back();
+    }
+  });
+  
+  // Button container
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.display = 'flex';
+  buttonContainer.style.alignItems = 'center';
+  buttonContainer.style.marginTop = '20px';
+  buttonContainer.appendChild(saveButton);
+  buttonContainer.appendChild(cancelButton);
   
   // Assemble UI
   container.appendChild(title);
@@ -223,11 +209,9 @@ async function renderConfig() {
   container.appendChild(input);
   container.appendChild(displayModeLabel);
   container.appendChild(displayModeContainer);
-  container.appendChild(previewLabel);
-  container.appendChild(previewArea);
   container.appendChild(examplesLabel);
   container.appendChild(examplesContainer);
-  container.appendChild(saveButton);
+  container.appendChild(buttonContainer);
   
   root.appendChild(container);
 }
