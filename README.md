@@ -1,6 +1,6 @@
 # TeXBloX
 
-[![Forge Validation & Runs on Atlassian Compliance](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml)
+[![Forge Validation & Runs on Atlassian Compliance](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml)[![Unit Tests](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml)
 
 Beautiful LaTeX math blocks for Confluence.
 
