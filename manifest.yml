@@ -4,19 +4,27 @@ modules:
       resource: main
       resolver:
         function: resolver
-      title: TeXBloX
-      description: "Render LaTeX math blocks on your Confluence pages"
+      title: "LaTeX Formula"
+      description: "Display mathematical formulas using LaTeX"
+      categories: ["formatting"]
+      layout: "inline"
+      config:
+        resource: config
       parameters:
         - key: formula
-          name: Formula
-          description: Enter LaTeX code (without $$ delimiters)
+          name: "LaTeX Formula"
+          description: "Enter your LaTeX formula (without $$ delimiters)"
           type: string
+          required: true
+          defaultValue: "E = mc^2"
   function:
     - key: resolver
       handler: index.handler
 resources:
   - key: main
     path: static
+  - key: config
+    path: static-config
 app:
   runtime:
     name: nodejs22.x
@@ -24,4 +32,5 @@ app:
     architecture: arm64
   id: ari:cloud:ecosystem::app/446c2bb7-9a68-48a6-83f6-38fc41031264
 permissions:
-  scopes: []
+  scopes:
+    - read:confluence-content.summary

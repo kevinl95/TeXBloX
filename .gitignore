@@ -8,6 +8,7 @@ lerna-debug.log*
 
 # Forge files
 static/
+static-config/
 /dist
 .env
 
