@@ -58,14 +58,6 @@ The TeXBloX configuration dialog provides:
 - **Formula input**: Large text area for entering LaTeX formulas
 - **Display mode selection**: Choose between inline and block display modes
 - **Quick examples**: Pre-built buttons for common mathematical expressions
-- **Clean interface**: Simple, focused design without preview complications
-
-### Troubleshooting
-
-- **Can't type in the macro**: You need to configure the macro parameters, not type directly in the block
-- **No formula shown**: Check that you entered the formula in the macro configuration dialog
-- **Render errors**: Ensure your LaTeX syntax is correct (TeXBloX uses KaTeX syntax)
-- **Configuration won't open**: Try refreshing the page and clicking the configure button again
 
 ## Technical Implementation
 
@@ -84,4 +76,3 @@ The TeXBloX configuration dialog provides:
 - KaTeX is bundled in the frontend so the app will not touch a CDN during rendering
 - All font assets are bundled locally for offline operation
 - No external network requests are made during LaTeX rendering
-- Clean, production-ready code without debug logging or unnecessary dependencies
