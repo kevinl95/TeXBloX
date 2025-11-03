@@ -40,6 +40,4 @@ app:
     memoryMB: 256
     architecture: arm64
   id: ari:cloud:ecosystem::app/446c2bb7-9a68-48a6-83f6-38fc41031264
-permissions:
-  scopes:
-    - read:confluence-content.summary
+# No permissions needed - TeXBloX is a pure rendering macro

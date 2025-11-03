@@ -7,6 +7,10 @@
   [![Unit Tests](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml)
   
   **Beautiful LaTeX math blocks for Confluence.**
+  
+  <a href="https://developer.atlassian.com/console/install/446c2bb7-9a68-48a6-83f6-38fc41031264?signature=AYABeOm4TjCa5aWrYxIQNbUAKRoAAAADAAdhd3Mta21zAEthcm46YXdzOmttczp1cy13ZXN0LTI6NzA5NTg3ODM1MjQzOmtleS83MDVlZDY3MC1mNTdjLTQxYjUtOWY5Yi1lM2YyZGNjMTQ2ZTcAuAECAQB4IOp8r3eKNYw8z2v%2FEq3%2FfvrZguoGsXpNSaDveR%2FF%2Fo0Bhg3IJVYl3j053HncO1YRzgAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOmXXgfEDy%2B%2BrxY7SgIBEIA793sBN%2BBvrXLyVJTSxsfuuPhgkNpQ%2FKf2HgxP7BOqhCtbq4Bo2tfEBIK2Z%2BDvEXJVjoPsfeTVdVwDExgAB2F3cy1rbXMAS2Fybjphd3M6a21zOmV1LXdlc3QtMTo3MDk1ODc4MzUyNDM6a2V5LzQ2MzBjZTZiLTAwYzMtNGRlMi04NzdiLTYyN2UyMDYwZTVjYwC4AQICAHijmwVTMt6Oj3F%2B0%2B0cVrojrS8yZ9ktpdfDxqPMSIkvHAEV7Rr8sKtVd8%2BAghZQ97r3AAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM5IBYM%2FDHt1MdHjrWAgEQgDukm5VEPbnXvaySwaTaQBL8djlnbMg5HMrtrGnb692A8X%2Fk8u%2FZxDcigN675rDKAWC4qGgPdYhzkZuE9gAHYXdzLWttcwBLYXJuOmF3czprbXM6dXMtZWFzdC0xOjcwOTU4NzgzNTI0MzprZXkvNmMxMjBiYTAtNGNkNS00OTg1LWI4MmUtNDBhMDQ5NTJjYzU3ALgBAgIAeLKa7Dfn9BgbXaQmJGrkKztjV4vrreTkqr7wGwhqIYs5ATfDlfHnk11mYtjsZ%2Fnil9kAAAB%2BMHwGCSqGSIb3DQEHBqBvMG0CAQAwaAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAyLYapP85LjCpZzX%2BQCARCAO2tAf%2BbiLqftpbfkXnuWcZpIGTIW%2BSsO5W%2B%2FbpzIRVj5OS%2BWNJ3Xy7soWPcxRsGMyM2XtJzzANWnxN0PAgAAAAAMAAAQAAAAAAAAAAAAAAAAAKvsCUhtZw56iGkM4L7jRkH%2F%2F%2F%2F%2FAAAAAQAAAAAAAAAAAAAAAQAAADKfNrV%2Fb6sUwPL9OVhkJKVcJ6WQ2sdUUtl0fuIHvlbJaBz5GThYhW6AvpC7y%2Bjk31N5E2dFS5IA7PTU1TXkBbekAfg%3D&product=confluence">
+    <img src="https://developer.atlassian.com/platform/marketplace/images/install-dark-blue.png" alt="Install TeXBloX for Confluence" width="185" height="50">
+  </a>
 </div>
 
 ## Goals
@@ -95,6 +99,13 @@ npm test
 - `tests/main-rendering.test.js` - Tests for LaTeX rendering logic
 - `tests/config-interface.test.js` - Tests for configuration interface logic  
 - `tests/utilities.test.js` - Tests for utility functions and data handling
+
+## Privacy & Security
+
+- **No data collection**: TeXBloX does not collect, store, or transmit any personal data
+- **Privacy Policy**: See [PRIVACY.md](PRIVACY.md) for complete details
+- **Runs on Atlassian compliant**: No external permissions or network requests
+- **Local operation**: All processing happens within your Confluence environment
 
 ## Notes on Runs on Atlassian
 
