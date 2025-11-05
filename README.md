@@ -6,7 +6,9 @@
   [![Forge Validation & Runs on Atlassian Compliance](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/forge-validation.yml)
   [![Unit Tests](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml/badge.svg)](https://github.com/kevinl95/TeXBloX/actions/workflows/test.yml)
   
-  **Beautiful LaTeX math blocks for Confluence.**
+   **Beautiful LaTeX math blocks for Confluence.**
+
+   **Macro name in Confluence:** **"LaTeX Formula"**
   
   <div style="background: #0052CC; color: white; padding: 12px 24px; border-radius: 4px; display: inline-block; margin: 10px 0; text-decoration: none; font-weight: 600;">
     <a href="https://developer.atlassian.com/console/install/446c2bb7-9a68-48a6-83f6-38fc41031264?signature=AYABeOm4TjCa5aWrYxIQNbUAKRoAAAADAAdhd3Mta21zAEthcm46YXdzOmttczp1cy13ZXN0LTI6NzA5NTg3ODM1MjQzOmtleS83MDVlZDY3MC1mNTdjLTQxYjUtOWY5Yi1lM2YyZGNjMTQ2ZTcAuAECAQB4IOp8r3eKNYw8z2v%2FEq3%2FfvrZguoGsXpNSaDveR%2FF%2Fo0Bhg3IJVYl3j053HncO1YRzgAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDOmXXgfEDy%2B%2BrxY7SgIBEIA793sBN%2BBvrXLyVJTSxsfuuPhgkNpQ%2FKf2HgxP7BOqhCtbq4Bo2tfEBIK2Z%2BDvEXJVjoPsfeTVdVwDExgAB2F3cy1rbXMAS2Fybjphd3M6a21zOmV1LXdlc3QtMTo3MDk1ODc4MzUyNDM6a2V5LzQ2MzBjZTZiLTAwYzMtNGRlMi04NzdiLTYyN2UyMDYwZTVjYwC4AQICAHijmwVTMt6Oj3F%2B0%2B0cVrojrS8yZ9ktpdfDxqPMSIkvHAEV7Rr8sKtVd8%2BAghZQ97r3AAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM5IBYM%2FDHt1MdHjrWAgEQgDukm5VEPbnXvaySwaTaQBL8djlnbMg5HMrtrGnb692A8X%2Fk8u%2FZxDcigN675rDKAWC4qGgPdYhzkZuE9gAHYXdzLWttcwBLYXJuOmF3czprbXM6dXMtZWFzdC0xOjcwOTU4NzgzNTI0MzprZXkvNmMxMjBiYTAtNGNkNS00OTg1LWI4MmUtNDBhMDQ5NTJjYzU3ALgBAgIAeLKa7Dfn9BgbXaQmJGrkKztjV4vrreTkqr7wGwhqIYs5ATfDlfHnk11mYtjsZ%2Fnil9kAAAB%2BMHwGCSqGSIb3DQEHBqBvMG0CAQAwaAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAyLYapP85LjCpZzX%2BQCARCAO2tAf%2BbiLqftpbfkXnuWcZpIGTIW%2BSsO5W%2B%2FbpzIRVj5OS%2BWNJ3Xy7soWPcxRsGMyM2XtJzzANWnxN0PAgAAAAAMAAAQAAAAAAAAAAAAAAAAAKvsCUhtZw56iGkM4L7jRkH%2F%2F%2F%2F%2FAAAAAQAAAAAAAAAAAAAAAQAAADKfNrV%2Fb6sUwPL9OVhkJKVcJ6WQ2sdUUtl0fuIHvlbJaBz5GThYhW6AvpC7y%2Bjk31N5E2dFS5IA7PTU1TXkBbekAfg%3D&product=confluence" style="color: white; text-decoration: none;">
@@ -48,7 +50,7 @@
 
 ### Adding a Formula
 
-1. **Add the macro**: Click the `+` button and search for "TeXBloX"
+1. **Add the macro**: Click the `+` button and search for "LaTeX Formula" (this is the macro name shown in the Confluence editor)
 2. **Configure the macro**: Click on the TeXBloX block and select the configure/edit button (gear icon)
 3. **Enter your LaTeX**: In the formula field, enter your LaTeX code (without `$$` delimiters)
 4. **Choose display mode**: Select either "Inline" (flows with text) or "Block" (centered, separate line)
