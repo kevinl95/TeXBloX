@@ -23,6 +23,7 @@
 - No external CDNs or outbound network requests — fully Runs on Atlassian compliant
 - Simple, reliable configuration interface focused on core functionality
 - Professional mathematical typography for Confluence pages
+- **NEW: AI-powered LaTeX generation** through Rovo agent integration
 
 ## Local Development
 
@@ -57,6 +58,33 @@
 5. **Use quick examples**: Click example buttons to insert common formulas like quadratic, integral, sum, or matrix
 6. **Save**: Click "Save Formula" to render the equation on your page
 
+### 🤖 AI-Powered LaTeX Generation (NEW!)
+
+TeXBloX now includes a **Rovo AI agent** that can generate LaTeX formulas from natural language descriptions!
+
+**How to use the AI assistant:**
+1. **Open Rovo**: In Confluence, click the Rovo icon or use `/rovo` command
+2. **Find LaTeX Assistant**: Look for "LaTeX Formula Assistant" in your available agents
+3. **Describe your formula**: Ask in plain English, e.g., "Create the quadratic formula" or "Generate LaTeX for a 2x2 matrix"
+4. **Get LaTeX code**: The agent will generate the proper LaTeX syntax
+5. **Copy and paste**: Use the generated LaTeX in your TeXBloX macro
+
+**Example prompts:**
+- "Create a formula for the quadratic equation"
+- "How do I write the integral of sine x in LaTeX?"
+- "Generate LaTeX for a 2x2 matrix"
+- "Help me write Einstein's mass-energy equivalence"
+- "Show me the formula for standard deviation"
+
+The AI assistant can generate LaTeX for:
+- Basic algebra (quadratic formula, polynomials)
+- Calculus (integrals, derivatives, limits)
+- Physics equations (E=mc², kinetic energy, etc.)
+- Statistics (normal distribution, standard deviation)
+- Linear algebra (matrices, determinants)
+- Summations and series
+- Greek letters and mathematical symbols
+
 ### Example Formulas
 
 - **Quadratic formula**: `\frac{-b \pm \sqrt{b^2-4ac}}{2a}`
@@ -77,6 +105,7 @@ The TeXBloX configuration dialog provides:
 ### Architecture
 - **Main macro**: Renders LaTeX formulas on published Confluence pages using KaTeX
 - **Configuration interface**: Simple form for entering formulas and selecting display modes
+- **Rovo AI agent**: Natural language to LaTeX conversion powered by Atlassian's Rovo platform
 - **Build system**: Custom UI build process that creates separate bundles for main and config resources
 
 ### Display Modes

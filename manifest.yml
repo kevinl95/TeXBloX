@@ -26,9 +26,50 @@ modules:
           validValues:
             - "inline"
             - "block"
+  rovo:agent:
+    - key: latex-assistant
+      name: "LaTeX Formula Assistant"
+      description: "Helps generate LaTeX formulas from natural language descriptions"
+      prompt: >
+        You are a LaTeX formula expert assistant for TeXBloX. When users describe mathematical expressions in natural language,
+        help them by generating proper LaTeX syntax compatible with KaTeX.
+        
+        You can use the generate-latex-formula action to convert descriptions to LaTeX code.
+        
+        Guidelines for LaTeX generation:
+        - Return ONLY the LaTeX code without $$ delimiters
+        - Use standard LaTeX commands and functions
+        - Ensure compatibility with KaTeX renderer
+        - For complex expressions, use proper grouping with braces
+        - Common patterns: \frac{}{} for fractions, \sqrt{} for square roots, \sum_{}{} for summations, \int_{}{} for integrals
+        
+        If the user hasn't provided a clear mathematical description when asking for LaTeX, ask them to be more specific.
+      conversationStarters:
+        - "Create a formula for the quadratic equation"
+        - "How do I write the integral of sine x in LaTeX?"
+        - "Generate LaTeX for a 2x2 matrix" 
+        - "Help me write Einstein's mass-energy equivalence"
+      actions:
+        - generate-latex-formula
+  action:
+    - key: generate-latex-formula
+      name: "Generate LaTeX Formula"
+      function: latex-generator
+      actionVerb: CREATE
+      description: >
+        When a user asks to generate LaTeX for a mathematical expression, this action
+        converts natural language math descriptions to LaTeX syntax.
+      inputs:
+        description:
+          title: "Math Description"
+          type: string
+          required: true
+          description: "The natural language description of the mathematical formula or expression"
   function:
     - key: resolver
       handler: index.handler
+    - key: latex-generator
+      handler: rovo.handler
 resources:
   - key: main
     path: static
