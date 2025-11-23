@@ -53,19 +53,33 @@ async function render() {
     formulaSource = 'editing-mode-default';
   }
   
+  
+  // Create outer wrapper for block mode centering
+  const wrapper = document.createElement('div');
+  
+  if (displayMode === 'block') {
+    // Block mode: create a wrapper that forces centering behavior
+    wrapper.style.display = 'block';
+    wrapper.style.textAlign = 'center';
+    wrapper.style.width = '100%';
+    wrapper.style.margin = '10px 0';
+  } else {
+    // Inline mode: wrapper is transparent
+    wrapper.style.display = 'inline';
+  }
+  
   // Create container with inline styles (CSP-safe) - prevent squishing
   const mathContainer = document.createElement('div');
   
   if (displayMode === 'block') {
-    // Block mode: centered, full width
-    mathContainer.style.display = 'block';
+    // Block mode: inline-block so it centers within wrapper
+    mathContainer.style.display = 'inline-block';
     mathContainer.style.textAlign = 'center';
-    mathContainer.style.margin = '10px 0';      // Vertical margin for spacing
-    mathContainer.style.width = '100%';
+    mathContainer.style.margin = '0 auto';
   } else {
     // Inline mode: inline with text
     mathContainer.style.display = 'inline-block';
-    mathContainer.style.margin = '0 4px';       // More side margin
+    mathContainer.style.margin = '0 4px';
     mathContainer.style.verticalAlign = 'middle';
   }
   
@@ -89,10 +103,10 @@ async function render() {
       trust: true,
       // Ensure fonts are loaded properly
       macros: {},
-      fleqn: false
+      fleqn: false  // This ensures centering for display mode
     });
     
-
+    // KaTeX renders block mode centered by default, don't override it
     
   } catch (err) {
     console.error('❌ KaTeX render error:', err);
@@ -101,11 +115,12 @@ async function render() {
 
 
   
-  // Remove the test prefix - just add the math directly
-  root.appendChild(mathContainer);
+  // Append mathContainer to wrapper, then wrapper to root
+  wrapper.appendChild(mathContainer);
+  root.appendChild(wrapper);
   
   if (displayMode === 'block') {
-    // Block mode: full width, block display
+    // Block mode: full width to allow wrapper to center
     root.style.display = 'block';
     root.style.width = '100%';
     root.style.margin = '0';
@@ -157,27 +172,37 @@ async function render() {
     const horizontalPadding = isComplexExpression ? 30 : 20; // More padding for complex expressions
     const verticalPadding = isComplexExpression ? 12 : 8;
     
-    const minWidth = Math.max(maxWidth + horizontalPadding, 60);
-    const minHeight = Math.max(maxHeight + verticalPadding, 25);
+    let finalWidth, finalHeight;
+    
+    if (displayMode === 'block') {
+      // Block mode: iframe needs to be full width so wrapper can center the math
+      // Use a large width that ensures it spans the content area
+      finalWidth = Math.max(800, maxWidth + horizontalPadding);
+      finalHeight = Math.max(maxHeight + verticalPadding, 25);
+    } else {
+      // Inline mode: iframe should fit content exactly
+      finalWidth = Math.max(maxWidth + horizontalPadding, 60);
+      finalHeight = Math.max(maxHeight + verticalPadding, 25);
+    }
     
 
     
     // Resize the root container
-    root.style.width = `${minWidth}px`;
-    root.style.height = `${minHeight}px`;
-    root.style.minWidth = `${minWidth}px`;
-    root.style.minHeight = `${minHeight}px`;
+    root.style.width = `${finalWidth}px`;
+    root.style.height = `${finalHeight}px`;
+    root.style.minWidth = `${finalWidth}px`;
+    root.style.minHeight = `${finalHeight}px`;
     
     // Since Forge Bridge doesn't have resize, use CSS to communicate size to Confluence
-    document.body.style.width = `${minWidth}px`;
-    document.body.style.height = `${minHeight}px`;
-    document.body.style.minWidth = `${minWidth}px`;
-    document.body.style.minHeight = `${minHeight}px`;
+    document.body.style.width = `${finalWidth}px`;
+    document.body.style.height = `${finalHeight}px`;
+    document.body.style.minWidth = `${finalWidth}px`;
+    document.body.style.minHeight = `${finalHeight}px`;
     document.body.style.overflow = 'visible';
     
     // Also set html element to ensure proper sizing
-    document.documentElement.style.width = `${minWidth}px`;
-    document.documentElement.style.height = `${minHeight}px`;
+    document.documentElement.style.width = `${finalWidth}px`;
+    document.documentElement.style.height = `${finalHeight}px`;
     
 
     hasResized = true;
