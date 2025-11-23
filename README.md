@@ -74,7 +74,7 @@ The TeXBloX configuration dialog provides:
 
 ## Technical Implementation
 
-![TeXBloX Architecture](assets/architecture-diagram.png)
+![TeXBloX Architecture](assets/architecture.png)
 
 ### Architecture
 - **Main macro**: Renders LaTeX formulas on published Confluence pages using KaTeX
